@@ -42,16 +42,19 @@ public class WaypointsGUI extends GuiScreen {
 
     private GuiButton waypointsEnabled;
     private GuiButton practiceModeEnabled;
+    private GuiButton showBeams;
+    private GuiButton showOutlines;
     private GuiButton showEntrance;
     private GuiButton showSuperboom;
     private GuiButton showSecrets;
     private GuiButton showFairySouls;
     private GuiButton showStonk;
+    private GuiButton showEther;
     private GuiButton disableWhenAllFound;
     private GuiButton sneakToDisable;
     private GuiButton close;
 
-    public static List<GuiButton> secretButtonList = new ArrayList<>(Arrays.asList(new GuiButton[10]));
+    public static List<GuiButton> secretButtonList = new ArrayList<>(Arrays.asList(new GuiButton[13]));
 
     private static boolean waypointGuiOpened = false;
 
@@ -71,22 +74,29 @@ public class WaypointsGUI extends GuiScreen {
 
         waypointsEnabled = new GuiButton(0, (width / 2 - 100) + 0, height / 6 - 5, 200, 20, waypointBtnText());
         practiceModeEnabled = new GuiButton(1, (width / 2 - 100) - 110, height / 6 + 25, 200, 20, "Practice Mode: " + getOnOff(Waypoints.practiceModeOn));
-        showEntrance = new GuiButton(2, (width / 2 - 100) + 110, height / 6 + 25, 200, 20, "Show Entrance Waypoints: " + getOnOff(Waypoints.showEntrance));
-        showSuperboom = new GuiButton(3, (width / 2 - 100) - 110, height / 6 + 55, 200, 20, "Show Superboom Waypoints: " + getOnOff(Waypoints.showSuperboom));
-        showSecrets = new GuiButton(4, (width / 2 - 100) + 110, height / 6 + 55, 200, 20, "Show Secret Waypoints: " + getOnOff(Waypoints.showSecrets));
-        showFairySouls = new GuiButton(5, (width / 2 - 100) - 110, height / 6 + 85, 200, 20, "Show Fairy Soul Waypoints: " + getOnOff(Waypoints.showFairySouls));
-        showStonk = new GuiButton(6, (width / 2 - 100) + 110, height / 6 + 85, 200, 20, "Show Stonk Waypoints: " + getOnOff(Waypoints.showStonk));
-        sneakToDisable = new GuiButton(7, (width / 2 - 100) - 110, height / 6 + 115, 200, 20, "Double-Tap Sneak to Hide Nearby: " + getOnOff(Waypoints.sneakToDisable));
-        disableWhenAllFound = new GuiButton(8, (width / 2 - 100) + 110, height / 6 + 115, 200, 20, "Disable when all secrets found: " + getOnOff(Waypoints.disableWhenAllFound));
-        close = new GuiButton(9, width / 2 - 100, (height / 6) * 5, 200, 20, "Close");
+        beamsEnabled = new GuiButton(2, (width / 2 - 100) + 110, height / 6 + 25, 200, 20, "Beacon Beams: " + getOnOff(Waypoints.showBeams));
+        outlinesEnabled = new GuiButton(3, (width / 2 - 100) - 110, height / 6 + 55, 200, 20, "Secret Boxes: " + getOnOff(Waypoints.showOutlines));
+        showEntrance = new GuiButton(4, (width / 2 - 100) + 110, height / 6 + 55, 200, 20, "Show Entrance Waypoints: " + getOnOff(Waypoints.showEntrance));
+        showSuperboom = new GuiButton(5, (width / 2 - 100) - 110, height / 6 + 85, 200, 20, "Show Superboom Waypoints: " + getOnOff(Waypoints.showSuperboom));
+        showSecrets = new GuiButton(6, (width / 2 - 100) + 110, height / 6 + 85, 200, 20, "Show Secret Waypoints: " + getOnOff(Waypoints.showSecrets));
+        showFairySouls = new GuiButton(7, (width / 2 - 100) - 110, height / 6 + 115, 200, 20, "Show Fairy Soul Waypoints: " + getOnOff(Waypoints.showFairySouls));
+        showStonk = new GuiButton(8, (width / 2 - 100) + 110, height / 6 + 115, 200, 20, "Show Stonk Waypoints: " + getOnOff(Waypoints.showStonk));
+        showEther = new GuiButton(9, (width / 2 - 100) - 110, height / 6 + 145, 200, 20, "Show Etherwarp Waypoints: " + getOnOff(Waypoints.showEther));
+        sneakToDisable = new GuiButton(10, (width / 2 - 100) + 110, height / 6 + 145, 200, 20, "Double-Tap Sneak to Hide Nearby: " + getOnOff(Waypoints.sneakToDisable));
+        disableWhenAllFound = new GuiButton(11, (width / 2 - 100) - 110, height / 6 + 175, 200, 20, "Disable when all secrets found: " + getOnOff(Waypoints.disableWhenAllFound));
+        close = new GuiButton(12, (width / 2 - 100) + 110, height / 6 + 175, 200, 20, "Close");
+        
 
         this.buttonList.add(waypointsEnabled);
         this.buttonList.add(practiceModeEnabled);
+        this.buttonList.add(beamsEnabled);
+        this.buttonList.add(outlinesEnabled);
         this.buttonList.add(showEntrance);
         this.buttonList.add(showSuperboom);
         this.buttonList.add(showSecrets);
         this.buttonList.add(showFairySouls);
         this.buttonList.add(showStonk);
+        this.buttonList.add(showEther);
         this.buttonList.add(sneakToDisable);
         this.buttonList.add(disableWhenAllFound);
         this.buttonList.add(close);
@@ -170,6 +180,14 @@ public class WaypointsGUI extends GuiScreen {
                         + "§r (Hotkey is configurable in Minecraft Controls menu)"
                 ));
             }
+        } else if (button == showBeams) {
+            Waypoints.showBeams = !Waypoints.showBeams;
+            ConfigHandler.writeBooleanConfig("waypoint", "showBeams", Waypoints.showBeams);
+            showBeams.displayString = "Show Beacon Beams: " + getOnOff(Waypoints.showBeams);
+        } else if (button == showOutlines) {
+            Waypoints.showOutlines = !Waypoints.showOutlines;
+            ConfigHandler.writeBooleanConfig("waypoint", "showOutlines", Waypoints.showOutlines);
+            showOutlines.displayString = "Show Secret Boxes: " + getOnOff(Waypoints.showOutlines);
         } else if (button == showEntrance) {
             Waypoints.showEntrance = !Waypoints.showEntrance;
             ConfigHandler.writeBooleanConfig("waypoint", "showEntrance", Waypoints.showEntrance);
@@ -190,6 +208,10 @@ public class WaypointsGUI extends GuiScreen {
             Waypoints.showStonk = !Waypoints.showStonk;
             ConfigHandler.writeBooleanConfig("waypoint", "showStonk", Waypoints.showStonk);
             showStonk.displayString = "Show Stonk Waypoints: " + getOnOff(Waypoints.showStonk);
+        } else if (button == showEther) {
+            Waypoints.showEther = !Waypoints.showEther;
+            ConfigHandler.writeBooleanConfig("waypoint", "showEther", Waypoints.showEther);
+            showEther.displayString = "Show Etherwarp Waypoints: " + getOnOff(Waypoints.showEther);
         } else if (button == sneakToDisable) {
             Waypoints.sneakToDisable = !Waypoints.sneakToDisable;
             ConfigHandler.writeBooleanConfig("waypoint", "sneakToDisable", Waypoints.sneakToDisable);
